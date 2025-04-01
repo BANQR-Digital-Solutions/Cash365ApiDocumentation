@@ -1,718 +1,4498 @@
----
-swagger: "2.0"
-info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
-tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
-paths:
-  /pet/{petId}/uploadImage:
-    post:
-      tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
-    post:
-      tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    put:
-      tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
-      tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
-    get:
-      tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
-definitions:
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "OData Service for namespace Microsoft.NAV",
+    "description": "This OData service is located at http://localhost",
+    "version": "1.0.0",
+    "x-ms-generated-by": {
+      "toolName": "Microsoft.OpenApi.OData",
+      "toolVersion": "1.0.9.0"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "description": "Provides operations to manage the collection of account entities.",
+      "get": {
+        "tags": [
+          "accounts.account"
+        ],
+        "summary": "Get entities from accounts",
+        "operationId": "accounts.account.ListAccount",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.accountCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/accounts({auxiliaryIndex1})": {
+      "description": "Provides operations to manage the collection of account entities.",
+      "get": {
+        "tags": [
+          "accounts.account"
+        ],
+        "summary": "Get entity from accounts by key",
+        "operationId": "accounts.account.GetAccount",
+        "parameters": [
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of account",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "account"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.account"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/accounts/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "accounts.account"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "accounts.GetCount-4219",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/apicategoryroutes": {
+      "description": "Provides operations to manage the collection of apicategoryroutes entities.",
+      "get": {
+        "tags": [
+          "apicategoryroutes.apicategoryroutes"
+        ],
+        "summary": "Get entities from apicategoryroutes",
+        "operationId": "apicategoryroutes.apicategoryroutes.ListApicategoryroutes",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.apicategoryroutesCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/apicategoryroutes({route})": {
+      "description": "Provides operations to manage the collection of apicategoryroutes entities.",
+      "get": {
+        "tags": [
+          "apicategoryroutes.apicategoryroutes"
+        ],
+        "summary": "Get entity from apicategoryroutes by key",
+        "operationId": "apicategoryroutes.apicategoryroutes.GetApicategoryroutes",
+        "parameters": [
+          {
+            "name": "route",
+            "in": "path",
+            "description": "The unique identifier of apicategoryroutes",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "apicategoryroutes"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.apicategoryroutes"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/apicategoryroutes/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "apicategoryroutes.apicategoryroutes"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "apicategoryroutes.GetCount-8bb4",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/companies": {
+      "description": "Provides operations to manage the collection of company entities.",
+      "get": {
+        "tags": [
+          "companies.company"
+        ],
+        "summary": "Get entities from companies",
+        "operationId": "companies.company.ListCompany",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.companyCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/companies({id})": {
+      "description": "Provides operations to manage the collection of company entities.",
+      "get": {
+        "tags": [
+          "companies.company"
+        ],
+        "summary": "Get entity from companies by key",
+        "operationId": "companies.company.GetCompany",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.company"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/companies({id})/accounts": {
+      "description": "Provides operations to manage the accounts property of the Microsoft.NAV.company entity.",
+      "get": {
+        "tags": [
+          "companies.account"
+        ],
+        "summary": "Get accounts from companies",
+        "operationId": "companies.ListAccounts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.accountCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "post": {
+        "tags": [
+          "companies.account"
+        ],
+        "summary": "Create new navigation property to accounts for companies",
+        "operationId": "companies.CreateAccounts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          }
+        ],
+        "requestBody": {
+          "description": "New navigation property",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.account"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created navigation property.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.account"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/companies({id})/accounts({auxiliaryIndex1})": {
+      "description": "Provides operations to manage the accounts property of the Microsoft.NAV.company entity.",
+      "get": {
+        "tags": [
+          "companies.account"
+        ],
+        "summary": "Get accounts from companies",
+        "operationId": "companies.GetAccounts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of account",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "account"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved navigation property",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.account"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "patch": {
+        "tags": [
+          "companies.account"
+        ],
+        "summary": "Update the navigation property accounts in companies",
+        "operationId": "companies.UpdateAccounts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of account",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "account"
+          }
+        ],
+        "requestBody": {
+          "description": "New navigation property values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.account"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "delete": {
+        "tags": [
+          "companies.account"
+        ],
+        "summary": "Delete navigation property accounts for companies",
+        "operationId": "companies.DeleteAccounts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of account",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "account"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "ETag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/companies({id})/accounts/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "companies.account"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "companies.accounts.GetCount-26d0",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/companies({id})/entitlements": {
+      "description": "Provides operations to manage the entitlements property of the Microsoft.NAV.company entity.",
+      "get": {
+        "tags": [
+          "companies.entitlement"
+        ],
+        "summary": "Get entitlements from companies",
+        "operationId": "companies.ListEntitlements",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.entitlementCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "post": {
+        "tags": [
+          "companies.entitlement"
+        ],
+        "summary": "Create new navigation property to entitlements for companies",
+        "operationId": "companies.CreateEntitlements",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          }
+        ],
+        "requestBody": {
+          "description": "New navigation property",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.entitlement"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created navigation property.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.entitlement"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/companies({id})/entitlements({auxiliaryIndex1})": {
+      "description": "Provides operations to manage the entitlements property of the Microsoft.NAV.company entity.",
+      "get": {
+        "tags": [
+          "companies.entitlement"
+        ],
+        "summary": "Get entitlements from companies",
+        "operationId": "companies.GetEntitlements",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of entitlement",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "entitlement"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved navigation property",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.entitlement"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "patch": {
+        "tags": [
+          "companies.entitlement"
+        ],
+        "summary": "Update the navigation property entitlements in companies",
+        "operationId": "companies.UpdateEntitlements",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of entitlement",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "entitlement"
+          }
+        ],
+        "requestBody": {
+          "description": "New navigation property values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.entitlement"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "delete": {
+        "tags": [
+          "companies.entitlement"
+        ],
+        "summary": "Delete navigation property entitlements for companies",
+        "operationId": "companies.DeleteEntitlements",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of entitlement",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "entitlement"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "ETag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/companies({id})/entitlements/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "companies.entitlement"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "companies.entitlements.GetCount-94d3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/companies({id})/transactions": {
+      "description": "Provides operations to manage the transactions property of the Microsoft.NAV.company entity.",
+      "get": {
+        "tags": [
+          "companies.transaction"
+        ],
+        "summary": "Get transactions from companies",
+        "operationId": "companies.ListTransactions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.transactionCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "post": {
+        "tags": [
+          "companies.transaction"
+        ],
+        "summary": "Create new navigation property to transactions for companies",
+        "operationId": "companies.CreateTransactions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          }
+        ],
+        "requestBody": {
+          "description": "New navigation property",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.transaction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created navigation property.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.transaction"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/companies({id})/transactions({auxiliaryIndex1})": {
+      "description": "Provides operations to manage the transactions property of the Microsoft.NAV.company entity.",
+      "get": {
+        "tags": [
+          "companies.transaction"
+        ],
+        "summary": "Get transactions from companies",
+        "operationId": "companies.GetTransactions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of transaction",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            },
+            "x-ms-docs-key-type": "transaction"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved navigation property",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.transaction"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "patch": {
+        "tags": [
+          "companies.transaction"
+        ],
+        "summary": "Update the navigation property transactions in companies",
+        "operationId": "companies.UpdateTransactions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of transaction",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            },
+            "x-ms-docs-key-type": "transaction"
+          }
+        ],
+        "requestBody": {
+          "description": "New navigation property values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.transaction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "delete": {
+        "tags": [
+          "companies.transaction"
+        ],
+        "summary": "Delete navigation property transactions for companies",
+        "operationId": "companies.DeleteTransactions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of transaction",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            },
+            "x-ms-docs-key-type": "transaction"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "ETag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/companies({id})/transactions/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "companies.transaction"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "companies.transactions.GetCount-a6d1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/companies/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "companies.company"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "companies.GetCount-5813",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/entitlements": {
+      "description": "Provides operations to manage the collection of entitlement entities.",
+      "get": {
+        "tags": [
+          "entitlements.entitlement"
+        ],
+        "summary": "Get entities from entitlements",
+        "operationId": "entitlements.entitlement.ListEntitlement",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.entitlementCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/entitlements({auxiliaryIndex1})": {
+      "description": "Provides operations to manage the collection of entitlement entities.",
+      "get": {
+        "tags": [
+          "entitlements.entitlement"
+        ],
+        "summary": "Get entity from entitlements by key",
+        "operationId": "entitlements.entitlement.GetEntitlement",
+        "parameters": [
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of entitlement",
+            "required": true,
+            "schema": {
+              "maxLength": 20,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "entitlement"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.entitlement"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/entitlements/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "entitlements.entitlement"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "entitlements.GetCount-abd8",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/entityDefinitions": {
+      "description": "Provides operations to manage the collection of entityMetadata entities.",
+      "get": {
+        "tags": [
+          "entityDefinitions.entityMetadata"
+        ],
+        "summary": "Get entities from entityDefinitions",
+        "operationId": "entityDefinitions.entityMetadata.ListEntityMetadata",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.entityMetadataCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "entityDefinitions.entityMetadata"
+        ],
+        "summary": "Add new entity to entityDefinitions",
+        "operationId": "entityDefinitions.entityMetadata.CreateEntityMetadata",
+        "requestBody": {
+          "description": "New entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.entityMetadata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.entityMetadata"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/entityDefinitions({entityName})": {
+      "description": "Provides operations to manage the collection of entityMetadata entities.",
+      "get": {
+        "tags": [
+          "entityDefinitions.entityMetadata"
+        ],
+        "summary": "Get entity from entityDefinitions by key",
+        "operationId": "entityDefinitions.entityMetadata.GetEntityMetadata",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "The unique identifier of entityMetadata",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "entityMetadata"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.entityMetadata"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "patch": {
+        "tags": [
+          "entityDefinitions.entityMetadata"
+        ],
+        "summary": "Update entity in entityDefinitions",
+        "operationId": "entityDefinitions.entityMetadata.UpdateEntityMetadata",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "The unique identifier of entityMetadata",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "entityMetadata"
+          }
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.entityMetadata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "delete": {
+        "tags": [
+          "entityDefinitions.entityMetadata"
+        ],
+        "summary": "Delete entity from entityDefinitions",
+        "operationId": "entityDefinitions.entityMetadata.DeleteEntityMetadata",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "The unique identifier of entityMetadata",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "entityMetadata"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "ETag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/entityDefinitions/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "entityDefinitions.entityMetadata"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "entityDefinitions.GetCount-7d89",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/externalbusinesseventdefinitions": {
+      "description": "Provides operations to manage the collection of externalbusinesseventdefinitions entities.",
+      "get": {
+        "tags": [
+          "externalbusinesseventdefinitions.externalbusinesseventdefinitions"
+        ],
+        "summary": "Get entities from externalbusinesseventdefinitions",
+        "operationId": "externalbusinesseventdefinitions.externalbusinesseventdefinitions.ListExternalbusinesseventdefinitions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.externalbusinesseventdefinitionsCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/externalbusinesseventdefinitions(appId={appId},name={name},eventVersion={eventVersion})": {
+      "description": "Provides operations to manage the collection of externalbusinesseventdefinitions entities.",
+      "get": {
+        "tags": [
+          "externalbusinesseventdefinitions.externalbusinesseventdefinitions"
+        ],
+        "summary": "Get entity from externalbusinesseventdefinitions by key",
+        "operationId": "externalbusinesseventdefinitions.externalbusinesseventdefinitions.GetExternalbusinesseventdefinitions",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Property in multi-part unique identifier of externalbusinesseventdefinitions",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "externalbusinesseventdefinitions"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Property in multi-part unique identifier of externalbusinesseventdefinitions",
+            "required": true,
+            "schema": {
+              "maxLength": 80,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "externalbusinesseventdefinitions"
+          },
+          {
+            "name": "eventVersion",
+            "in": "path",
+            "description": "Property in multi-part unique identifier of externalbusinesseventdefinitions",
+            "required": true,
+            "schema": {
+              "maxLength": 43,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "externalbusinesseventdefinitions"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.externalbusinesseventdefinitions"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/externalbusinesseventdefinitions/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "externalbusinesseventdefinitions.externalbusinesseventdefinitions"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "externalbusinesseventdefinitions.GetCount-e7e3",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/externaleventsubscriptions": {
+      "description": "Provides operations to manage the collection of externaleventsubscriptions entities.",
+      "get": {
+        "tags": [
+          "externaleventsubscriptions.externaleventsubscriptions"
+        ],
+        "summary": "Get entities from externaleventsubscriptions",
+        "operationId": "externaleventsubscriptions.externaleventsubscriptions.ListExternaleventsubscriptions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.externaleventsubscriptionsCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "externaleventsubscriptions.externaleventsubscriptions"
+        ],
+        "summary": "Add new entity to externaleventsubscriptions",
+        "operationId": "externaleventsubscriptions.externaleventsubscriptions.CreateExternaleventsubscriptions",
+        "requestBody": {
+          "description": "New entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.externaleventsubscriptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.externaleventsubscriptions"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/externaleventsubscriptions({id})": {
+      "description": "Provides operations to manage the collection of externaleventsubscriptions entities.",
+      "get": {
+        "tags": [
+          "externaleventsubscriptions.externaleventsubscriptions"
+        ],
+        "summary": "Get entity from externaleventsubscriptions by key",
+        "operationId": "externaleventsubscriptions.externaleventsubscriptions.GetExternaleventsubscriptions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of externaleventsubscriptions",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "externaleventsubscriptions"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.externaleventsubscriptions"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "patch": {
+        "tags": [
+          "externaleventsubscriptions.externaleventsubscriptions"
+        ],
+        "summary": "Update entity in externaleventsubscriptions",
+        "operationId": "externaleventsubscriptions.externaleventsubscriptions.UpdateExternaleventsubscriptions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of externaleventsubscriptions",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "externaleventsubscriptions"
+          }
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.externaleventsubscriptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "delete": {
+        "tags": [
+          "externaleventsubscriptions.externaleventsubscriptions"
+        ],
+        "summary": "Delete entity from externaleventsubscriptions",
+        "operationId": "externaleventsubscriptions.externaleventsubscriptions.DeleteExternaleventsubscriptions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of externaleventsubscriptions",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "externaleventsubscriptions"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "ETag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/externaleventsubscriptions/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "externaleventsubscriptions.externaleventsubscriptions"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "externaleventsubscriptions.GetCount-8377",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/subscriptions": {
+      "description": "Provides operations to manage the collection of subscriptions entities.",
+      "get": {
+        "tags": [
+          "subscriptions.subscriptions"
+        ],
+        "summary": "Get entities from subscriptions",
+        "operationId": "subscriptions.subscriptions.ListSubscriptions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.subscriptionsCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "subscriptions.subscriptions"
+        ],
+        "summary": "Add new entity to subscriptions",
+        "operationId": "subscriptions.subscriptions.CreateSubscriptions",
+        "requestBody": {
+          "description": "New entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.subscriptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.subscriptions"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/subscriptions({subscriptionId})": {
+      "description": "Provides operations to manage the collection of subscriptions entities.",
+      "get": {
+        "tags": [
+          "subscriptions.subscriptions"
+        ],
+        "summary": "Get entity from subscriptions by key",
+        "operationId": "subscriptions.subscriptions.GetSubscriptions",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "description": "The unique identifier of subscriptions",
+            "required": true,
+            "schema": {
+              "maxLength": 150,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "subscriptions"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.subscriptions"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "patch": {
+        "tags": [
+          "subscriptions.subscriptions"
+        ],
+        "summary": "Update entity in subscriptions",
+        "operationId": "subscriptions.subscriptions.UpdateSubscriptions",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "description": "The unique identifier of subscriptions",
+            "required": true,
+            "schema": {
+              "maxLength": 150,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "subscriptions"
+          }
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.subscriptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "delete": {
+        "tags": [
+          "subscriptions.subscriptions"
+        ],
+        "summary": "Delete entity from subscriptions",
+        "operationId": "subscriptions.subscriptions.DeleteSubscriptions",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "description": "The unique identifier of subscriptions",
+            "required": true,
+            "schema": {
+              "maxLength": 150,
+              "type": "string"
+            },
+            "x-ms-docs-key-type": "subscriptions"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "ETag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/subscriptions/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "subscriptions.subscriptions"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "subscriptions.GetCount-8aee",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "description": "Provides operations to manage the collection of transaction entities.",
+      "get": {
+        "tags": [
+          "transactions.transaction"
+        ],
+        "summary": "Get entities from transactions",
+        "operationId": "transactions.transaction.ListTransaction",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.transactionCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/transactions({auxiliaryIndex1})": {
+      "description": "Provides operations to manage the collection of transaction entities.",
+      "get": {
+        "tags": [
+          "transactions.transaction"
+        ],
+        "summary": "Get entity from transactions by key",
+        "operationId": "transactions.transaction.GetTransaction",
+        "parameters": [
+          {
+            "name": "auxiliaryIndex1",
+            "in": "path",
+            "description": "The unique identifier of transaction",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            },
+            "x-ms-docs-key-type": "transaction"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.transaction"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/transactions/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "transactions.transaction"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "transactions.GetCount-6fc6",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Microsoft.NAV.entityMetadata": {
+        "title": "entityMetadata",
+        "type": "object",
+        "properties": {
+          "entityName": {
+            "type": "string"
+          },
+          "entitySetName": {
+            "type": "string",
+            "nullable": true
+          },
+          "entityCaptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataLabel"
+            }
+          },
+          "entitySetCaptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataLabel"
+            }
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataField"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataAction"
+            }
+          },
+          "enumMembers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataEnumMember"
+            }
+          }
+        },
+        "example": {
+          "entityName": "string (identifier)",
+          "entitySetName": "string",
+          "entityCaptions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ],
+          "entitySetCaptions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ],
+          "properties": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataField"
+            }
+          ],
+          "actions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataAction"
+            }
+          ],
+          "enumMembers": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataEnumMember"
+            }
+          ]
+        }
+      },
+      "Microsoft.NAV.entityMetadataLabel": {
+        "title": "entityMetadataLabel",
+        "type": "object",
+        "properties": {
+          "languageCode": {
+            "maximum": 2147483647,
+            "minimum": -2147483648,
+            "type": "number",
+            "format": "int32"
+          },
+          "caption": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "languageCode": "number",
+          "caption": "string"
+        }
+      },
+      "Microsoft.NAV.entityMetadataField": {
+        "title": "entityMetadataField",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "captions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataLabel"
+            }
+          }
+        },
+        "example": {
+          "name": "string",
+          "captions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ]
+        }
+      },
+      "Microsoft.NAV.entityMetadataAction": {
+        "title": "entityMetadataAction",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "captions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataLabel"
+            }
+          }
+        },
+        "example": {
+          "name": "string",
+          "captions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ]
+        }
+      },
+      "Microsoft.NAV.entityMetadataEnumMember": {
+        "title": "entityMetadataEnumMember",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "maximum": 2147483647,
+            "minimum": -2147483648,
+            "type": "number",
+            "format": "int32"
+          },
+          "captions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataLabel"
+            }
+          }
+        },
+        "example": {
+          "name": "string",
+          "value": "number",
+          "captions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ]
+        }
+      },
+      "Microsoft.NAV.company": {
+        "title": "company",
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid"
+          },
+          "systemVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "number",
+            "format": "int64",
+            "nullable": true
+          },
+          "name": {
+            "maxLength": 30,
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "businessProfileId": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "systemCreatedAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "systemCreatedBy": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "systemModifiedAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "systemModifiedBy": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "entitlements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entitlement"
+            },
+            "x-ms-navigationProperty": true
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.transaction"
+            },
+            "x-ms-navigationProperty": true
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.account"
+            },
+            "x-ms-navigationProperty": true
+          }
+        },
+        "example": {
+          "id": "string (identifier)",
+          "systemVersion": "string",
+          "timestamp": "number",
+          "name": "string",
+          "displayName": "string",
+          "businessProfileId": "string",
+          "systemCreatedAt": "string (timestamp)",
+          "systemCreatedBy": "string",
+          "systemModifiedAt": "string (timestamp)",
+          "systemModifiedBy": "string",
+          "entitlements": [
+            {
+              "@odata.type": "Microsoft.NAV.entitlement"
+            }
+          ],
+          "transactions": [
+            {
+              "@odata.type": "Microsoft.NAV.transaction"
+            }
+          ],
+          "accounts": [
+            {
+              "@odata.type": "Microsoft.NAV.account"
+            }
+          ]
+        }
+      },
+      "Microsoft.NAV.subscriptions": {
+        "title": "subscriptions",
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "maxLength": 150,
+            "type": "string"
+          },
+          "notificationUrl": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number",
+            "format": "int64",
+            "nullable": true
+          },
+          "userId": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "lastModifiedDateTime": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "clientState": {
+            "maxLength": 2048,
+            "type": "string",
+            "nullable": true
+          },
+          "expirationDateTime": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "systemCreatedAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "systemCreatedBy": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "systemModifiedAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "systemModifiedBy": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "example": {
+          "subscriptionId": "string (identifier)",
+          "notificationUrl": "string",
+          "resource": "string",
+          "timestamp": "number",
+          "userId": "string",
+          "lastModifiedDateTime": "string (timestamp)",
+          "clientState": "string",
+          "expirationDateTime": "string (timestamp)",
+          "systemCreatedAt": "string (timestamp)",
+          "systemCreatedBy": "string",
+          "systemModifiedAt": "string (timestamp)",
+          "systemModifiedBy": "string"
+        }
+      },
+      "Microsoft.NAV.externaleventsubscriptions": {
+        "title": "externaleventsubscriptions",
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid"
+          },
+          "companyId": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "number",
+            "format": "int64",
+            "nullable": true
+          },
+          "appId": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "eventName": {
+            "maxLength": 80,
+            "type": "string",
+            "nullable": true
+          },
+          "companyName": {
+            "maxLength": 30,
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "notificationUrl": {
+            "maxLength": 2048,
+            "type": "string",
+            "nullable": true
+          },
+          "lastModifiedDateTime": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "clientState": {
+            "maxLength": 2048,
+            "type": "string",
+            "nullable": true
+          },
+          "subscriptionType": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventVersion": {
+            "maxLength": 43,
+            "type": "string",
+            "nullable": true
+          },
+          "subscriptionState": {
+            "type": "string",
+            "nullable": true
+          },
+          "systemCreatedAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "systemCreatedBy": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "systemModifiedAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "systemModifiedBy": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "example": {
+          "id": "string (identifier)",
+          "companyId": "string",
+          "timestamp": "number",
+          "appId": "string",
+          "eventName": "string",
+          "companyName": "string",
+          "userId": "string",
+          "notificationUrl": "string",
+          "lastModifiedDateTime": "string (timestamp)",
+          "clientState": "string",
+          "subscriptionType": "string",
+          "eventVersion": "string",
+          "subscriptionState": "string",
+          "systemCreatedAt": "string (timestamp)",
+          "systemCreatedBy": "string",
+          "systemModifiedAt": "string (timestamp)",
+          "systemModifiedBy": "string"
+        }
+      },
+      "Microsoft.NAV.externalbusinesseventdefinitions": {
+        "title": "externalbusinesseventdefinitions",
+        "type": "object",
+        "properties": {
+          "appId": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "maxLength": 80,
+            "type": "string"
+          },
+          "eventVersion": {
+            "maxLength": 43,
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          },
+          "displayName": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 1024,
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "appName": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "appPublisher": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "appVersion": {
+            "maxLength": 43,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "example": {
+          "appId": "string (identifier)",
+          "name": "string (identifier)",
+          "eventVersion": "string (identifier)",
+          "payload": "string",
+          "displayName": "string",
+          "description": "string",
+          "category": "string",
+          "appName": "string",
+          "appPublisher": "string",
+          "appVersion": "string"
+        }
+      },
+      "Microsoft.NAV.apicategoryroutes": {
+        "title": "apicategoryroutes",
+        "type": "object",
+        "properties": {
+          "route": {
+            "type": "string"
+          },
+          "publisher": {
+            "maxLength": 40,
+            "type": "string",
+            "nullable": true
+          },
+          "group": {
+            "maxLength": 40,
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "maxLength": 10,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "example": {
+          "route": "string (identifier)",
+          "publisher": "string",
+          "group": "string",
+          "version": "string"
+        }
+      },
+      "Microsoft.NAV.entitlement": {
+        "title": "entitlement",
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "iban": {
+            "maxLength": 37,
+            "type": "string",
+            "nullable": true
+          },
+          "bic": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "maxLength": 10,
+            "type": "string",
+            "nullable": true
+          },
+          "availableBalance": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currentBalance": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "accountHolderName": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastModifiedDateTime": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "auxiliaryIndex1": {
+            "maxLength": 20,
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "string",
+          "iban": "string",
+          "bic": "string",
+          "currencyCode": "string",
+          "availableBalance": "number",
+          "currentBalance": "number",
+          "accountHolderName": "string",
+          "createdAt": "string (timestamp)",
+          "lastModifiedDateTime": "string (timestamp)",
+          "auxiliaryIndex1": "string (identifier)"
+        }
+      },
+      "Microsoft.NAV.transaction": {
+        "title": "transaction",
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "bookingDate": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$",
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "valueDate": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$",
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currencyCode": {
+            "maxLength": 10,
+            "type": "string",
+            "nullable": true
+          },
+          "counterPartyIban": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "counterPartyName": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
+          "mandateReference": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastModifiedDateTime": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "auxiliaryIndex1": {
+            "type": "number",
+            "format": "int64"
+          }
+        },
+        "example": {
+          "id": "string",
+          "bookingDate": "string (timestamp)",
+          "valueDate": "string (timestamp)",
+          "amount": "number",
+          "currencyCode": "string",
+          "counterPartyIban": "string",
+          "counterPartyName": "string",
+          "mandateReference": "string",
+          "createdAt": "string (timestamp)",
+          "lastModifiedDateTime": "string (timestamp)",
+          "auxiliaryIndex1": "number (identifier)"
+        }
+      },
+      "Microsoft.NAV.account": {
+        "title": "account",
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "iban": {
+            "maxLength": 37,
+            "type": "string",
+            "nullable": true
+          },
+          "bic": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "maxLength": 10,
+            "type": "string",
+            "nullable": true
+          },
+          "availableBalance": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currentBalance": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "accountHolderName": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastModifiedDateTime": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "auxiliaryIndex1": {
+            "maxLength": 20,
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "string",
+          "iban": "string",
+          "bic": "string",
+          "currencyCode": "string",
+          "availableBalance": "number",
+          "currentBalance": "number",
+          "accountHolderName": "string",
+          "createdAt": "string (timestamp)",
+          "lastModifiedDateTime": "string (timestamp)",
+          "auxiliaryIndex1": "string (identifier)"
+        }
+      },
+      "Microsoft.NAV.ODataErrors.ODataError": {
+        "required": [
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/Microsoft.NAV.ODataErrors.MainError"
+          }
+        }
+      },
+      "Microsoft.NAV.ODataErrors.MainError": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "x-ms-primary-error-message": true
+          },
+          "target": {
+            "type": "string",
+            "nullable": true
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.ODataErrors.ErrorDetails"
+            }
+          },
+          "innerError": {
+            "$ref": "#/components/schemas/Microsoft.NAV.ODataErrors.InnerError"
+          }
+        }
+      },
+      "Microsoft.NAV.ODataErrors.ErrorDetails": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Microsoft.NAV.ODataErrors.InnerError": {
+        "type": "object",
+        "description": "The structure of this object is service-specific"
+      },
+      "ODataCountResponse": {
+        "type": "integer",
+        "format": "int32"
+      },
+      "Microsoft.NAV.entityMetadataCollectionResponse": {
+        "title": "Collection of entityMetadata",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadata"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.companyCollectionResponse": {
+        "title": "Collection of company",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.company"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.subscriptionsCollectionResponse": {
+        "title": "Collection of subscriptions",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.subscriptions"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.externaleventsubscriptionsCollectionResponse": {
+        "title": "Collection of externaleventsubscriptions",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.externaleventsubscriptions"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.externalbusinesseventdefinitionsCollectionResponse": {
+        "title": "Collection of externalbusinesseventdefinitions",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.externalbusinesseventdefinitions"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.apicategoryroutesCollectionResponse": {
+        "title": "Collection of apicategoryroutes",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.apicategoryroutes"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entitlementCollectionResponse": {
+        "title": "Collection of entitlement",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entitlement"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.transactionCollectionResponse": {
+        "title": "Collection of transaction",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.transaction"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.accountCollectionResponse": {
+        "title": "Collection of account",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.account"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataLabelCollectionResponse": {
+        "title": "Collection of Microsoft.NAV.entityMetadataLabel",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataLabel"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataFieldCollectionResponse": {
+        "title": "Collection of Microsoft.NAV.entityMetadataField",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataField"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataActionCollectionResponse": {
+        "title": "Collection of Microsoft.NAV.entityMetadataAction",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataAction"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataEnumMemberCollectionResponse": {
+        "title": "Collection of Microsoft.NAV.entityMetadataEnumMember",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataEnumMember"
+            }
+          }
+        }
+      },
+      "ReferenceUpdate": {
+        "type": "object",
+        "properties": {
+          "@odata.id": {
+            "type": "string"
+          },
+          "@odata.type": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ReferenceCreate": {
+        "type": "object",
+        "properties": {
+          "@odata.id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {
+          "type": "object"
+        }
+      },
+      "ReferenceNumeric": {
+        "enum": [
+          "-INF",
+          "INF",
+          "NaN"
+        ],
+        "type": "string",
+        "nullable": true
+      }
+    },
+    "responses": {
+      "error": {
+        "description": "error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.ODataErrors.ODataError"
+            }
+          }
+        }
+      },
+      "ODataCountResponse": {
+        "description": "The count of the resource",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "$ref": "#/components/schemas/ODataCountResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.companyCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.companyCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.subscriptionsCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.subscriptionsCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.externaleventsubscriptionsCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.externaleventsubscriptionsCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.externalbusinesseventdefinitionsCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.externalbusinesseventdefinitionsCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.apicategoryroutesCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.apicategoryroutesCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entitlementCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entitlementCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.transactionCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.transactionCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.accountCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.accountCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataLabelCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataLabelCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataFieldCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataFieldCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataActionCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataActionCollectionResponse"
+            }
+          }
+        }
+      },
+      "Microsoft.NAV.entityMetadataEnumMemberCollectionResponse": {
+        "description": "Retrieved collection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Microsoft.NAV.entityMetadataEnumMemberCollectionResponse"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "top": {
+        "name": "$top",
+        "in": "query",
+        "description": "Show only the first n items",
+        "style": "form",
+        "explode": false,
+        "schema": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "example": 50
+      },
+      "skip": {
+        "name": "$skip",
+        "in": "query",
+        "description": "Skip the first n items",
+        "style": "form",
+        "explode": false,
+        "schema": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "count": {
+        "name": "$count",
+        "in": "query",
+        "description": "Include count of items",
+        "style": "form",
+        "explode": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "filter": {
+        "name": "$filter",
+        "in": "query",
+        "description": "Filter items by property values",
+        "style": "form",
+        "explode": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "search": {
+        "name": "$search",
+        "in": "query",
+        "description": "Search items by search phrases",
+        "style": "form",
+        "explode": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "examples": {
+      "Microsoft.NAV.entityMetadata": {
+        "value": {
+          "actions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataAction"
+            }
+          ],
+          "entityCaptions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ],
+          "entityName": "String (identifier)",
+          "entitySetCaptions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ],
+          "entitySetName": "String",
+          "enumMembers": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataEnumMember"
+            }
+          ],
+          "properties": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataField"
+            }
+          ]
+        }
+      },
+      "Microsoft.NAV.entityMetadataLabel": {
+        "value": {
+          "caption": "String",
+          "languageCode": 0
+        }
+      },
+      "Microsoft.NAV.entityMetadataField": {
+        "value": {
+          "captions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ],
+          "name": "String"
+        }
+      },
+      "Microsoft.NAV.entityMetadataAction": {
+        "value": {
+          "captions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ],
+          "name": "String"
+        }
+      },
+      "Microsoft.NAV.entityMetadataEnumMember": {
+        "value": {
+          "captions": [
+            {
+              "@odata.type": "Microsoft.NAV.entityMetadataLabel"
+            }
+          ],
+          "name": "String",
+          "value": 0
+        }
+      },
+      "Microsoft.NAV.company": {
+        "value": {
+          "accounts": [
+            {
+              "@odata.type": "Microsoft.NAV.account"
+            }
+          ],
+          "businessProfileId": "String",
+          "displayName": "String",
+          "entitlements": [
+            {
+              "@odata.type": "Microsoft.NAV.entitlement"
+            }
+          ],
+          "id": "00000000-0000-0000-0000-000000000000 (identifier)",
+          "name": "String",
+          "systemCreatedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemCreatedBy": "00000000-0000-0000-0000-000000000000",
+          "systemModifiedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemModifiedBy": "00000000-0000-0000-0000-000000000000",
+          "systemVersion": "String",
+          "timestamp": 0,
+          "transactions": [
+            {
+              "@odata.type": "Microsoft.NAV.transaction"
+            }
+          ]
+        }
+      },
+      "Microsoft.NAV.subscriptions": {
+        "value": {
+          "clientState": "String",
+          "expirationDateTime": "0001-01-01T00:00:00.0000000+00:00",
+          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00",
+          "notificationUrl": "String",
+          "resource": "String",
+          "subscriptionId": "String (identifier)",
+          "systemCreatedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemCreatedBy": "00000000-0000-0000-0000-000000000000",
+          "systemModifiedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemModifiedBy": "00000000-0000-0000-0000-000000000000",
+          "timestamp": 0,
+          "userId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      "Microsoft.NAV.externaleventsubscriptions": {
+        "value": {
+          "appId": "00000000-0000-0000-0000-000000000000",
+          "clientState": "String",
+          "companyId": "00000000-0000-0000-0000-000000000000",
+          "companyName": "String",
+          "eventName": "String",
+          "eventVersion": "String",
+          "id": "00000000-0000-0000-0000-000000000000 (identifier)",
+          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00",
+          "notificationUrl": "String",
+          "subscriptionState": "String",
+          "subscriptionType": "String",
+          "systemCreatedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemCreatedBy": "00000000-0000-0000-0000-000000000000",
+          "systemModifiedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemModifiedBy": "00000000-0000-0000-0000-000000000000",
+          "timestamp": 0,
+          "userId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      "Microsoft.NAV.externalbusinesseventdefinitions": {
+        "value": {
+          "appId": "00000000-0000-0000-0000-000000000000 (identifier)",
+          "appName": "String",
+          "appPublisher": "String",
+          "appVersion": "String",
+          "category": "String",
+          "description": "String",
+          "displayName": "String",
+          "eventVersion": "String (identifier)",
+          "name": "String (identifier)",
+          "payload": "String"
+        }
+      },
+      "Microsoft.NAV.apicategoryroutes": {
+        "value": {
+          "group": "String",
+          "publisher": "String",
+          "route": "String (identifier)",
+          "version": "String"
+        }
+      },
+      "Microsoft.NAV.entitlement": {
+        "value": {
+          "accountHolderName": "String",
+          "auxiliaryIndex1": "String (identifier)",
+          "availableBalance": 0,
+          "bic": "String",
+          "createdAt": "0001-01-01T00:00:00.0000000+00:00",
+          "currencyCode": "String",
+          "currentBalance": 0,
+          "iban": "String",
+          "id": "00000000-0000-0000-0000-000000000000",
+          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00"
+        }
+      },
+      "Microsoft.NAV.transaction": {
+        "value": {
+          "amount": 0,
+          "auxiliaryIndex1": 0,
+          "bookingDate": "0001-01-01",
+          "counterPartyIban": "String",
+          "counterPartyName": "String",
+          "createdAt": "0001-01-01T00:00:00.0000000+00:00",
+          "currencyCode": "String",
+          "id": "00000000-0000-0000-0000-000000000000",
+          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00",
+          "mandateReference": "String",
+          "valueDate": "0001-01-01"
+        }
+      },
+      "Microsoft.NAV.account": {
+        "value": {
+          "accountHolderName": "String",
+          "auxiliaryIndex1": "String (identifier)",
+          "availableBalance": 0,
+          "bic": "String",
+          "createdAt": "0001-01-01T00:00:00.0000000+00:00",
+          "currencyCode": "String",
+          "currentBalance": 0,
+          "iban": "String",
+          "id": "00000000-0000-0000-0000-000000000000",
+          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00"
+        }
+      }
+    },
+    "requestBodies": {
+      "refPostBody": {
+        "description": "New navigation property ref value",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReferenceCreate"
+            }
+          }
+        },
+        "required": true
+      },
+      "refPutBody": {
+        "description": "New navigation property ref values",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReferenceUpdate"
+            }
+          }
+        },
+        "required": true
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "accounts.account",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "apicategoryroutes.apicategoryroutes",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "companies.company",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "companies.account",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "companies.entitlement",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "companies.transaction",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "entitlements.entitlement",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "entityDefinitions.entityMetadata",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "externalbusinesseventdefinitions.externalbusinesseventdefinitions",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "externaleventsubscriptions.externaleventsubscriptions",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "subscriptions.subscriptions",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "transactions.transaction",
+      "x-ms-docs-toc-type": "page"
+    }
+  ]
+}
