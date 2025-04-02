@@ -1,1 +1,231 @@
-{ "openapi": "3.0.3", "info": { "title": "Cas365", "version": "1.0.0", "contact": {} }, "servers": [ { "url": "https://api.businesscentral.dynamics.com" } ], "paths": { "/v2.0/4fec10aa-e544-4364-b0fd-d453521bc81c/DevStMa/api/banqr/bankaccounts/v1.1/companies(e7337e29-1edf-ef11-9344-002248e46240)/accounts": { "get": { "tags": [ "Accounts" ], "summary": "List Accounts", "description": "List Accounts", "operationId": "listAccounts", "responses": { "200": { "description": "" } } }, "post": { "tags": [ "Accounts" ], "summary": "Create Account", "description": "Create Account", "operationId": "createAccount", "requestBody": { "content": { "application/json": { "examples": { "Create Account": { "value": "{\n \"description\": \"Some Account Description\", // Max 50 characters\n \"accountHolderName\": \"Max Mustermann\", // Max 50 characters\n \"iban\": \"DE12341234123\", // Max 37 characters\n \"bic\": \"GENODED1BRS\", // Max 50 characters\n \"currencyCode\": \"EUR\" // Empty if default currency of the company\n}" } } } } }, "responses": { "200": { "description": "" } } } }, "/v2.0/4fec10aa-e544-4364-b0fd-d453521bc81c/DevStMa/api/banqr/bankaccounts/v1.1/companies(e7337e29-1edf-ef11-9344-002248e46240)/accounts(11573b7e-25df-ef11-9344-002248e46240)": { "get": { "tags": [ "Accounts" ], "summary": "Get Account", "description": "Get Account", "operationId": "getAccount", "responses": { "200": { "description": "" } } } }, "/v2.0/4fec10aa-e544-4364-b0fd-d453521bc81c/DevStMa/api/banqr/bankaccounts/v1.1/companies(e7337e29-1edf-ef11-9344-002248e46240)/accounts(708d9d33-cd0f-f011-9346-6045bd17bcaa)": { "patch": { "tags": [ "Accounts" ], "summary": "Update Account", "description": "the header `if-match` has to be set to a `\\*` to overwrite any changes. If you want to make sure that the record was not changed since you have read it, you need to put the `@odata.etag` of the record into the header", "operationId": "updateAccount", "parameters": [ { "name": "if-match", "in": "header", "schema": { "type": "string", "example": "W/\"JzE5OzE3MjM3MDEyMjAyNDc4OTc2NDYxOzAwOyc=\"" } } ], "requestBody": { "content": { "application/json": { "examples": { "Update Account": { "value": "{\n \"description\": \"Some Account Description 3\", // Max 50 characters\n \"accountHolderName\": \"Max Mustermann\", // Max 50 characters\n \"iban\": \"DE12341234123\", // Max 37 characters\n \"bic\": \"GENODED1BRS\", // Max 50 characters\n \"currencyCode\": \"EUR\" // Empty if default currency of the company\n}" } } } } }, "responses": { "200": { "description": "" } } } }, "/v2.0/4fec10aa-e544-4364-b0fd-d453521bc81c/DevStMa/api/banqr/bankaccounts/v1.1/companies(e7337e29-1edf-ef11-9344-002248e46240)/accounts(e17a17c8-cc0f-f011-9346-6045bd17bcaa)": { "delete": { "tags": [ "Accounts" ], "summary": "Delete Account", "description": "Delete Account", "operationId": "deleteAccount", "responses": { "200": { "description": "" } } } }, "/v2.0/4fec10aa-e544-4364-b0fd-d453521bc81c/DevStMa/api/banqr/bankaccounts/v1.1/companies(e7337e29-1edf-ef11-9344-002248e46240)/accounts(ff6bf37b-ce0f-f011-9346-6045bd17bcaa)/Microsoft.Nav.updateFromBank": { "post": { "tags": [ "Accounts" ], "summary": "Update Balance and Transactions", "description": "Update Balance and Transactions", "operationId": "updateBalanceAndTransactions", "responses": { "200": { "description": "" } } } }, "/v2.0/4fec10aa-e544-4364-b0fd-d453521bc81c/DevStMa/api/banqr/bankaccounts/v1.1/companies": { "get": { "tags": [ "Meta" ], "summary": "List Companies", "description": "List Companies", "operationId": "listCompanies", "responses": { "200": { "description": "" } } } } }, "components": { "securitySchemes": { "oauth2": { "type": "oauth2", "flows": { "authorizationCode": { "authorizationUrl": "", "tokenUrl": "", "scopes": {} } } } } }, "security": [ { "oauth2": [] } ], "tags": [ { "name": "Payments" }, { "name": "Accounts" }, { "name": "Meta" } ] }
+openapi: 3.0.0
+info:
+  title: Cas365
+  version: 1.0.0
+servers:
+  - url: https://api.businesscentral.dynamics.com
+components:
+  securitySchemes:
+    oauth2Auth:
+      type: http
+      scheme: oauth2
+security:
+  - oauth2Auth: []
+tags:
+  - name: Payments
+  - name: Accounts
+  - name: Meta
+paths:
+  /v2.0/{tenantId}/{environmentName}/api/banqr/bankaccounts/v1.1/companies({companyId})/accounts:
+    get:
+      tags:
+        - Accounts
+      summary: List Accounts
+      parameters:
+        - name: tenantId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: environmentName
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: companyId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Accounts
+      summary: Create Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: |-
+                {
+                    "description": "Some Account Description", // Max 50 characters
+                    "accountHolderName": "Max Mustermann", // Max 50 characters
+                    "iban": "DE12341234123", // Max 37 characters
+                    "bic": "GENODED1BRS", // Max 50 characters
+                    "currencyCode": "EUR" // Empty if default currency of the company
+                }
+      parameters:
+        - name: tenantId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: environmentName
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: companyId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2.0/{tenantId}/{environmentName}/api/banqr/bankaccounts/v1.1/companies({companyId})/accounts(11573b7e-25df-ef11-9344-002248e46240):
+    get:
+      tags:
+        - Accounts
+      summary: Get Account
+      parameters:
+        - name: tenantId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: environmentName
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: companyId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2.0/{tenantId}/{environmentName}/api/banqr/bankaccounts/v1.1/companies({companyId})/accounts(708d9d33-cd0f-f011-9346-6045bd17bcaa):
+    patch:
+      tags:
+        - Accounts
+      summary: Update Account
+      description: >-
+        the header `if-match` has to be set to a `\*` to overwrite any changes.
+        If you want to make sure that the record was not changed since you have
+        read it, you need to put the `@odata.etag` of the record into the header
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: |-
+                {
+                    "description": "Some Account Description 3", // Max 50 characters
+                    "accountHolderName": "Max Mustermann", // Max 50 characters
+                    "iban": "DE12341234123", // Max 37 characters
+                    "bic": "GENODED1BRS", // Max 50 characters
+                    "currencyCode": "EUR" // Empty if default currency of the company
+                }
+      parameters:
+        - name: If-Match
+          in: header
+          schema:
+            type: string
+          example: W/"JzE5OzE3MjM3MDEyMjAyNDc4OTc2NDYxOzAwOyc="
+        - name: tenantId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: environmentName
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: companyId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2.0/{tenantId}/{environmentName}/api/banqr/bankaccounts/v1.1/companies({companyId})/accounts(e17a17c8-cc0f-f011-9346-6045bd17bcaa):
+    delete:
+      tags:
+        - Accounts
+      summary: Delete Account
+      parameters:
+        - name: tenantId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: environmentName
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: companyId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2.0/{tenantId}/{environmentName}/api/banqr/bankaccounts/v1.1/companies({companyId})/accounts(ff6bf37b-ce0f-f011-9346-6045bd17bcaa)/Microsoft.Nav.updateFromBank:
+    post:
+      tags:
+        - Accounts
+      summary: Update Balance and Transactions
+      requestBody:
+        content: {}
+      parameters:
+        - name: tenantId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: environmentName
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: companyId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v2.0/{tenantId}/{environmentName}/api/banqr/bankaccounts/v1.1/companies:
+    get:
+      tags:
+        - Meta
+      summary: List Companies
+      parameters:
+        - name: tenantId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: environmentName
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
