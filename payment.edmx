@@ -45,6 +45,7 @@
                 <Property Name="systemCreatedBy" Type="Edm.Guid" />
                 <Property Name="systemModifiedAt" Type="Edm.DateTimeOffset" />
                 <Property Name="systemModifiedBy" Type="Edm.Guid" />
+                <NavigationProperty Name="payments" Type="Collection(Microsoft.NAV.payment)" ContainsTarget="true" />
                 <Annotation Term="OData.Community.Keys.V1.AlternateKeys">
                     <Collection>
                         <Record Type="OData.Community.Keys.V1.AlternateKey">
@@ -153,6 +154,34 @@
                 <Property Name="group" Type="Edm.String" MaxLength="40" />
                 <Property Name="version" Type="Edm.String" MaxLength="10" />
             </EntityType>
+            <EntityType Name="payment">
+                <Key>
+                    <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.Guid" Nullable="false" />
+                <Property Name="referencePaymentId" Type="Edm.String" MaxLength="100" />
+                <Property Name="accountNo" Type="Edm.String" MaxLength="20" />
+                <Property Name="senderIban" Type="Edm.String" MaxLength="50" />
+                <Property Name="recipientName" Type="Edm.String" MaxLength="100" />
+                <Property Name="recipientBic" Type="Edm.String" MaxLength="50" />
+                <Property Name="recipientIban" Type="Edm.String" MaxLength="50" />
+                <Property Name="amount" Type="Edm.Decimal" Scale="Variable" />
+                <Property Name="remittanceInformation" Type="Edm.String" MaxLength="140" />
+                <Property Name="lastModifiedDateTime" Type="Edm.DateTimeOffset" />
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" />
+            </EntityType>
+            <Action Name="approve" IsBound="true">
+                <Parameter Name="bindingParameter" Type="Microsoft.NAV.payment" />
+            </Action>
+            <Action Name="reopen" IsBound="true">
+                <Parameter Name="bindingParameter" Type="Microsoft.NAV.payment" />
+            </Action>
+            <Action Name="sendToBank" IsBound="true">
+                <Parameter Name="bindingParameter" Type="Microsoft.NAV.payment" />
+            </Action>
+            <Action Name="updateStatus" IsBound="true">
+                <Parameter Name="bindingParameter" Type="Microsoft.NAV.payment" />
+            </Action>
             <EntityContainer Name="NAV">
                 <EntitySet Name="entityDefinitions" EntityType="Microsoft.NAV.entityMetadata" />
                 <EntitySet Name="companies" EntityType="Microsoft.NAV.company">
@@ -287,6 +316,33 @@
                     <Annotation Term="Org.OData.Capabilities.V1.SortRestrictions">
                         <Record>
                             <PropertyValue Property="Sortable" Bool="false" />
+                        </Record>
+                    </Annotation>
+                </EntitySet>
+                <EntitySet Name="payments" EntityType="Microsoft.NAV.payment">
+                    <Annotation Term="Org.OData.Capabilities.V1.ChangeTracking">
+                        <Record>
+                            <PropertyValue Property="Supported" Bool="false" />
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+                        <Record>
+                            <PropertyValue Property="Deletable" Bool="true" />
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Org.OData.Capabilities.V1.InsertRestrictions">
+                        <Record>
+                            <PropertyValue Property="Insertable" Bool="true" />
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+                        <Record>
+                            <PropertyValue Property="Updatable" Bool="true" />
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Org.OData.Capabilities.V1.SortRestrictions">
+                        <Record>
+                            <PropertyValue Property="Sortable" Bool="true" />
                         </Record>
                     </Annotation>
                 </EntitySet>

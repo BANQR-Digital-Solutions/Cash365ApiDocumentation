@@ -57,11 +57,16 @@ function Update-YamlPaths {
     Write-Host "Updating YAML paths..."
     
     foreach ($path in $yaml.paths.PSObject.Properties.Name) {
+        # Skip $count endpoints
+        if ($path -match '\$count$') {
+            continue
+        }
+
         # Determine which entity this path belongs to
         $entityName = $null
         foreach ($entity in $capabilities.Keys) {
-            # Check if path starts with entity name (including nested paths)
-            if ($path -match "^/$entity(?:/|\(|$)") {
+            # Match both direct paths (/entity) and parameterized paths (/entity(param))
+            if ($path -match "^/$entity(?:\(|$)") {
                 $entityName = $entity
                 break
             }
@@ -71,15 +76,20 @@ function Update-YamlPaths {
             $entityCaps = $capabilities[$entityName]
             $pathObj = $yaml.paths.$path
             
-            # Remove POST if not insertable (for both root and nested paths)
-            if (-not $entityCaps.Insertable -and $pathObj.PSObject.Properties['post']) {
-                $pathObj.PSObject.Properties.Remove('post')
-                Write-Host "Removed POST operation from $path"
-                $modified = $true
+            Write-Host "Processing path '$path' for entity '$entityName'"
+            Write-Host "Capabilities: Insertable=$($entityCaps.Insertable), Updatable=$($entityCaps.Updatable), Deletable=$($entityCaps.Deletable)"
+
+            # Root collection endpoint - check POST
+            if ($path -eq "/$entityName") {
+                if (-not $entityCaps.Insertable -and $pathObj.PSObject.Properties['post']) {
+                    $pathObj.PSObject.Properties.Remove('post')
+                    Write-Host "Removed POST operation from $path"
+                    $modified = $true
+                }
             }
             
-            # Remove PATCH/DELETE for any path with parameters (both root and nested)
-            if ($path -match '\(.*\)') {  # Fixed regex pattern for matching paths with parameters
+            # Individual item endpoint - check PATCH/DELETE
+            if ($path -match '\([^)]+\)$') {
                 if (-not $entityCaps.Updatable -and $pathObj.PSObject.Properties['patch']) {
                     $pathObj.PSObject.Properties.Remove('patch')
                     Write-Host "Removed PATCH operation from $path"
