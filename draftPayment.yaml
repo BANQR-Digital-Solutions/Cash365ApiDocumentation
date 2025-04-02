@@ -329,14 +329,14 @@
         "x-ms-docs-operation-type": "operation"
       }
     },
-    "/companies({id})/drafts": {
-      "description": "Provides operations to manage the drafts property of the Microsoft.NAV.company entity.",
+    "/companies({id})/payments": {
+      "description": "Provides operations to manage the payments property of the Microsoft.NAV.company entity.",
       "get": {
         "tags": [
-          "companies.draft"
+          "companies.payment"
         ],
-        "summary": "Get drafts from companies",
-        "operationId": "companies.ListDrafts",
+        "summary": "Get payments from companies",
+        "operationId": "companies.ListPayments",
         "parameters": [
           {
             "name": "id",
@@ -410,7 +410,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Microsoft.NAV.draftCollectionResponse"
+            "$ref": "#/components/responses/Microsoft.NAV.paymentCollectionResponse"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -420,10 +420,10 @@
       },
       "post": {
         "tags": [
-          "companies.draft"
+          "companies.payment"
         ],
-        "summary": "Create new navigation property to drafts for companies",
-        "operationId": "companies.CreateDrafts",
+        "summary": "Create new navigation property to payments for companies",
+        "operationId": "companies.CreatePayments",
         "parameters": [
           {
             "name": "id",
@@ -443,7 +443,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.NAV.draft"
+                "$ref": "#/components/schemas/Microsoft.NAV.payment"
               }
             }
           },
@@ -455,7 +455,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Microsoft.NAV.draft"
+                  "$ref": "#/components/schemas/Microsoft.NAV.payment"
                 }
               }
             }
@@ -467,14 +467,14 @@
         "x-ms-docs-operation-type": "operation"
       }
     },
-    "/companies({id})/drafts({auxiliaryIndex1})": {
-      "description": "Provides operations to manage the drafts property of the Microsoft.NAV.company entity.",
+    "/companies({id})/payments({id1})": {
+      "description": "Provides operations to manage the payments property of the Microsoft.NAV.company entity.",
       "get": {
         "tags": [
-          "companies.draft"
+          "companies.payment"
         ],
-        "summary": "Get drafts from companies",
-        "operationId": "companies.GetDrafts",
+        "summary": "Get payments from companies",
+        "operationId": "companies.GetPayments",
         "parameters": [
           {
             "name": "id",
@@ -489,15 +489,16 @@
             "x-ms-docs-key-type": "company"
           },
           {
-            "name": "auxiliaryIndex1",
+            "name": "id1",
             "in": "path",
-            "description": "The unique identifier of draft",
+            "description": "The unique identifier of payment",
             "required": true,
             "schema": {
-              "maxLength": 20,
-              "type": "string"
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
             },
-            "x-ms-docs-key-type": "draft"
+            "x-ms-docs-key-type": "payment"
           },
           {
             "name": "$select",
@@ -534,7 +535,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Microsoft.NAV.draft"
+                  "$ref": "#/components/schemas/Microsoft.NAV.payment"
                 }
               }
             }
@@ -547,10 +548,10 @@
       },
       "patch": {
         "tags": [
-          "companies.draft"
+          "companies.payment"
         ],
-        "summary": "Update the navigation property drafts in companies",
-        "operationId": "companies.UpdateDrafts",
+        "summary": "Update the navigation property payments in companies",
+        "operationId": "companies.UpdatePayments",
         "parameters": [
           {
             "name": "id",
@@ -565,15 +566,16 @@
             "x-ms-docs-key-type": "company"
           },
           {
-            "name": "auxiliaryIndex1",
+            "name": "id1",
             "in": "path",
-            "description": "The unique identifier of draft",
+            "description": "The unique identifier of payment",
             "required": true,
             "schema": {
-              "maxLength": 20,
-              "type": "string"
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
             },
-            "x-ms-docs-key-type": "draft"
+            "x-ms-docs-key-type": "payment"
           }
         ],
         "requestBody": {
@@ -581,7 +583,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.NAV.draft"
+                "$ref": "#/components/schemas/Microsoft.NAV.payment"
               }
             }
           },
@@ -599,10 +601,10 @@
       },
       "delete": {
         "tags": [
-          "companies.draft"
+          "companies.payment"
         ],
-        "summary": "Delete navigation property drafts for companies",
-        "operationId": "companies.DeleteDrafts",
+        "summary": "Delete navigation property payments for companies",
+        "operationId": "companies.DeletePayments",
         "parameters": [
           {
             "name": "id",
@@ -617,15 +619,16 @@
             "x-ms-docs-key-type": "company"
           },
           {
-            "name": "auxiliaryIndex1",
+            "name": "id1",
             "in": "path",
-            "description": "The unique identifier of draft",
+            "description": "The unique identifier of payment",
             "required": true,
             "schema": {
-              "maxLength": 20,
-              "type": "string"
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
             },
-            "x-ms-docs-key-type": "draft"
+            "x-ms-docs-key-type": "payment"
           },
           {
             "name": "If-Match",
@@ -647,14 +650,194 @@
         "x-ms-docs-operation-type": "operation"
       }
     },
-    "/companies({id})/drafts/$count": {
+    "/companies({id})/payments({id1})/Microsoft.NAV.approve": {
+      "description": "Provides operations to call the approve method.",
+      "post": {
+        "tags": [
+          "companies.payment"
+        ],
+        "summary": "Invoke action approve",
+        "operationId": "companies.company.payments.payment.approve",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "id1",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/companies({id})/payments({id1})/Microsoft.NAV.reopen": {
+      "description": "Provides operations to call the reopen method.",
+      "post": {
+        "tags": [
+          "companies.payment"
+        ],
+        "summary": "Invoke action reopen",
+        "operationId": "companies.company.payments.payment.reopen",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "id1",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/companies({id})/payments({id1})/Microsoft.NAV.sendToBank": {
+      "description": "Provides operations to call the sendToBank method.",
+      "post": {
+        "tags": [
+          "companies.payment"
+        ],
+        "summary": "Invoke action sendToBank",
+        "operationId": "companies.company.payments.payment.sendToBank",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "id1",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/companies({id})/payments({id1})/Microsoft.NAV.updateStatus": {
+      "description": "Provides operations to call the updateStatus method.",
+      "post": {
+        "tags": [
+          "companies.payment"
+        ],
+        "summary": "Invoke action updateStatus",
+        "operationId": "companies.company.payments.payment.updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of company",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "company"
+          },
+          {
+            "name": "id1",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/companies({id})/payments/$count": {
       "description": "Provides operations to count the resources in the collection.",
       "get": {
         "tags": [
-          "companies.draft"
+          "companies.payment"
         ],
         "summary": "Get the number of the resource",
-        "operationId": "companies.drafts.GetCount-0120",
+        "operationId": "companies.payments.GetCount-4f2f",
         "parameters": [
           {
             "name": "id",
@@ -693,176 +876,6 @@
         ],
         "summary": "Get the number of the resource",
         "operationId": "companies.GetCount-5813",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/search"
-          },
-          {
-            "$ref": "#/components/parameters/filter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ODataCountResponse"
-          },
-          "default": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/drafts": {
-      "description": "Provides operations to manage the collection of draft entities.",
-      "get": {
-        "tags": [
-          "drafts.draft"
-        ],
-        "summary": "Get entities from drafts",
-        "operationId": "drafts.draft.ListDraft",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/top"
-          },
-          {
-            "$ref": "#/components/parameters/skip"
-          },
-          {
-            "$ref": "#/components/parameters/search"
-          },
-          {
-            "$ref": "#/components/parameters/filter"
-          },
-          {
-            "$ref": "#/components/parameters/count"
-          },
-          {
-            "name": "$orderby",
-            "in": "query",
-            "description": "Order items by property values",
-            "style": "form",
-            "explode": false,
-            "schema": {
-              "uniqueItems": true,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "$select",
-            "in": "query",
-            "description": "Select properties to be returned",
-            "style": "form",
-            "explode": false,
-            "schema": {
-              "uniqueItems": true,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "$expand",
-            "in": "query",
-            "description": "Expand related entities",
-            "style": "form",
-            "explode": false,
-            "schema": {
-              "uniqueItems": true,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/Microsoft.NAV.draftCollectionResponse"
-          },
-          "default": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/drafts({auxiliaryIndex1})": {
-      "description": "Provides operations to manage the collection of draft entities.",
-      "get": {
-        "tags": [
-          "drafts.draft"
-        ],
-        "summary": "Get entity from drafts by key",
-        "operationId": "drafts.draft.GetDraft",
-        "parameters": [
-          {
-            "name": "auxiliaryIndex1",
-            "in": "path",
-            "description": "The unique identifier of draft",
-            "required": true,
-            "schema": {
-              "maxLength": 20,
-              "type": "string"
-            },
-            "x-ms-docs-key-type": "draft"
-          },
-          {
-            "name": "$select",
-            "in": "query",
-            "description": "Select properties to be returned",
-            "style": "form",
-            "explode": false,
-            "schema": {
-              "uniqueItems": true,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "$expand",
-            "in": "query",
-            "description": "Expand related entities",
-            "style": "form",
-            "explode": false,
-            "schema": {
-              "uniqueItems": true,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieved entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Microsoft.NAV.draft"
-                }
-              }
-            }
-          },
-          "default": {
-            "$ref": "#/components/responses/error"
-          }
-        },
-        "x-ms-docs-operation-type": "operation"
-      }
-    },
-    "/drafts/$count": {
-      "description": "Provides operations to count the resources in the collection.",
-      "get": {
-        "tags": [
-          "drafts.draft"
-        ],
-        "summary": "Get the number of the resource",
-        "operationId": "drafts.GetCount-0d74",
         "parameters": [
           {
             "$ref": "#/components/parameters/search"
@@ -1636,6 +1649,422 @@
         }
       }
     },
+    "/payments": {
+      "description": "Provides operations to manage the collection of payment entities.",
+      "get": {
+        "tags": [
+          "payments.payment"
+        ],
+        "summary": "Get entities from payments",
+        "operationId": "payments.payment.ListPayment",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Microsoft.NAV.paymentCollectionResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "payments.payment"
+        ],
+        "summary": "Add new entity to payments",
+        "operationId": "payments.payment.CreatePayment",
+        "requestBody": {
+          "description": "New entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.payment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.payment"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/payments({id})": {
+      "description": "Provides operations to manage the collection of payment entities.",
+      "get": {
+        "tags": [
+          "payments.payment"
+        ],
+        "summary": "Get entity from payments by key",
+        "operationId": "payments.payment.GetPayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.NAV.payment"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "patch": {
+        "tags": [
+          "payments.payment"
+        ],
+        "summary": "Update entity in payments",
+        "operationId": "payments.payment.UpdatePayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Microsoft.NAV.payment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      },
+      "delete": {
+        "tags": [
+          "payments.payment"
+        ],
+        "summary": "Delete entity from payments",
+        "operationId": "payments.payment.DeletePayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "ETag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "operation"
+      }
+    },
+    "/payments({id})/Microsoft.NAV.approve": {
+      "description": "Provides operations to call the approve method.",
+      "post": {
+        "tags": [
+          "payments.payment.Actions"
+        ],
+        "summary": "Invoke action approve",
+        "operationId": "payments.payment.approve",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/payments({id})/Microsoft.NAV.reopen": {
+      "description": "Provides operations to call the reopen method.",
+      "post": {
+        "tags": [
+          "payments.payment.Actions"
+        ],
+        "summary": "Invoke action reopen",
+        "operationId": "payments.payment.reopen",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/payments({id})/Microsoft.NAV.sendToBank": {
+      "description": "Provides operations to call the sendToBank method.",
+      "post": {
+        "tags": [
+          "payments.payment.Actions"
+        ],
+        "summary": "Invoke action sendToBank",
+        "operationId": "payments.payment.sendToBank",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/payments({id})/Microsoft.NAV.updateStatus": {
+      "description": "Provides operations to call the updateStatus method.",
+      "post": {
+        "tags": [
+          "payments.payment.Actions"
+        ],
+        "summary": "Invoke action updateStatus",
+        "operationId": "payments.payment.updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of payment",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "type": "string",
+              "format": "uuid"
+            },
+            "x-ms-docs-key-type": "payment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "x-ms-docs-operation-type": "action"
+      }
+    },
+    "/payments/$count": {
+      "description": "Provides operations to count the resources in the collection.",
+      "get": {
+        "tags": [
+          "payments.payment"
+        ],
+        "summary": "Get the number of the resource",
+        "operationId": "payments.GetCount-7f23",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ODataCountResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/subscriptions": {
       "description": "Provides operations to manage the collection of subscriptions entities.",
       "get": {
@@ -2144,10 +2573,10 @@
             "format": "uuid",
             "nullable": true
           },
-          "drafts": {
+          "payments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Microsoft.NAV.draft"
+              "$ref": "#/components/schemas/Microsoft.NAV.payment"
             },
             "x-ms-navigationProperty": true
           }
@@ -2163,9 +2592,9 @@
           "systemCreatedBy": "string",
           "systemModifiedAt": "string (timestamp)",
           "systemModifiedBy": "string",
-          "drafts": [
+          "payments": [
             {
-              "@odata.type": "Microsoft.NAV.draft"
+              "@odata.type": "Microsoft.NAV.payment"
             }
           ]
         }
@@ -2462,39 +2891,26 @@
           "version": "string"
         }
       },
-      "Microsoft.NAV.draft": {
-        "title": "draft",
+      "Microsoft.NAV.payment": {
+        "title": "payment",
         "type": "object",
         "properties": {
           "id": {
             "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
             "type": "string",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
-          "status": {
-            "maxLength": 4,
+          "referencePaymentId": {
+            "maxLength": 100,
             "type": "string",
             "nullable": true
           },
-          "createdAat": {
-            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "modifiedAt": {
-            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "accountIban": {
-            "maxLength": 50,
+          "accountNo": {
+            "maxLength": 20,
             "type": "string",
             "nullable": true
           },
-          "senderName": {
+          "senderIban": {
             "maxLength": 50,
             "type": "string",
             "nullable": true
@@ -2504,12 +2920,12 @@
             "type": "string",
             "nullable": true
           },
-          "recipientIban": {
+          "recipientBic": {
             "maxLength": 50,
             "type": "string",
             "nullable": true
           },
-          "recipientBic": {
+          "recipientIban": {
             "maxLength": 50,
             "type": "string",
             "nullable": true
@@ -2519,53 +2935,36 @@
             "format": "decimal",
             "nullable": true
           },
-          "currencyCode": {
-            "maxLength": 10,
-            "type": "string",
-            "nullable": true
-          },
           "remittanceInformation": {
             "maxLength": 140,
             "type": "string",
             "nullable": true
           },
-          "paymentReference": {
-            "maxLength": 100,
+          "lastModifiedDateTime": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
             "type": "string",
+            "format": "date-time",
             "nullable": true
           },
-          "reasonCode": {
-            "maxLength": 100,
+          "createdAt": {
+            "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$",
             "type": "string",
+            "format": "date-time",
             "nullable": true
-          },
-          "approvalStatus": {
-            "maxLength": 4,
-            "type": "string",
-            "nullable": true
-          },
-          "auxiliaryIndex1": {
-            "maxLength": 20,
-            "type": "string"
           }
         },
         "example": {
-          "id": "string",
-          "status": "string",
-          "createdAat": "string (timestamp)",
-          "modifiedAt": "string (timestamp)",
-          "accountIban": "string",
-          "senderName": "string",
+          "id": "string (identifier)",
+          "referencePaymentId": "string",
+          "accountNo": "string",
+          "senderIban": "string",
           "recipientName": "string",
-          "recipientIban": "string",
           "recipientBic": "string",
+          "recipientIban": "string",
           "amount": "number",
-          "currencyCode": "string",
           "remittanceInformation": "string",
-          "paymentReference": "string",
-          "reasonCode": "string",
-          "approvalStatus": "string",
-          "auxiliaryIndex1": "string (identifier)"
+          "lastModifiedDateTime": "string (timestamp)",
+          "createdAt": "string (timestamp)"
         }
       },
       "Microsoft.NAV.ODataErrors.ODataError": {
@@ -2707,14 +3106,14 @@
           }
         }
       },
-      "Microsoft.NAV.draftCollectionResponse": {
-        "title": "Collection of draft",
+      "Microsoft.NAV.paymentCollectionResponse": {
+        "title": "Collection of payment",
         "type": "object",
         "properties": {
           "value": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Microsoft.NAV.draft"
+              "$ref": "#/components/schemas/Microsoft.NAV.payment"
             }
           }
         }
@@ -2881,12 +3280,12 @@
           }
         }
       },
-      "Microsoft.NAV.draftCollectionResponse": {
+      "Microsoft.NAV.paymentCollectionResponse": {
         "description": "Retrieved collection",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.NAV.draftCollectionResponse"
+              "$ref": "#/components/schemas/Microsoft.NAV.paymentCollectionResponse"
             }
           }
         }
@@ -3060,13 +3459,13 @@
         "value": {
           "businessProfileId": "String",
           "displayName": "String",
-          "drafts": [
-            {
-              "@odata.type": "Microsoft.NAV.draft"
-            }
-          ],
           "id": "00000000-0000-0000-0000-000000000000 (identifier)",
           "name": "String",
+          "payments": [
+            {
+              "@odata.type": "Microsoft.NAV.payment"
+            }
+          ],
           "systemCreatedAt": "0001-01-01T00:00:00.0000000+00:00",
           "systemCreatedBy": "00000000-0000-0000-0000-000000000000",
           "systemModifiedAt": "0001-01-01T00:00:00.0000000+00:00",
@@ -3134,24 +3533,19 @@
           "version": "String"
         }
       },
-      "Microsoft.NAV.draft": {
+      "Microsoft.NAV.payment": {
         "value": {
-          "accountIban": "String",
+          "accountNo": "String",
           "amount": 0,
-          "approvalStatus": "String",
-          "auxiliaryIndex1": "String (identifier)",
-          "createdAat": "0001-01-01T00:00:00.0000000+00:00",
-          "currencyCode": "String",
-          "id": "00000000-0000-0000-0000-000000000000",
-          "modifiedAt": "0001-01-01T00:00:00.0000000+00:00",
-          "paymentReference": "String",
-          "reasonCode": "String",
+          "createdAt": "0001-01-01T00:00:00.0000000+00:00",
+          "id": "00000000-0000-0000-0000-000000000000 (identifier)",
+          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00",
           "recipientBic": "String",
           "recipientIban": "String",
           "recipientName": "String",
+          "referencePaymentId": "String",
           "remittanceInformation": "String",
-          "senderName": "String",
-          "status": "String"
+          "senderIban": "String"
         }
       }
     },
@@ -3190,11 +3584,7 @@
       "x-ms-docs-toc-type": "page"
     },
     {
-      "name": "companies.draft",
-      "x-ms-docs-toc-type": "page"
-    },
-    {
-      "name": "drafts.draft",
+      "name": "companies.payment",
       "x-ms-docs-toc-type": "page"
     },
     {
@@ -3208,6 +3598,14 @@
     {
       "name": "externaleventsubscriptions.externaleventsubscriptions",
       "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "payments.payment",
+      "x-ms-docs-toc-type": "page"
+    },
+    {
+      "name": "payments.payment.Actions",
+      "x-ms-docs-toc-type": "container"
     },
     {
       "name": "subscriptions.subscriptions",
