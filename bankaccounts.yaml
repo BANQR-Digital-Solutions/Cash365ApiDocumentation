@@ -4304,9 +4304,9 @@
           ],
           "id": "00000000-0000-0000-0000-000000000000 (identifier)",
           "name": "String",
-          "systemCreatedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemCreatedAt": "0001-01-01T01:24:00+01:24",
           "systemCreatedBy": "00000000-0000-0000-0000-000000000000",
-          "systemModifiedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemModifiedAt": "0001-01-01T01:24:00+01:24",
           "systemModifiedBy": "00000000-0000-0000-0000-000000000000",
           "systemVersion": "String",
           "timestamp": 0,
@@ -4320,14 +4320,14 @@
       "Microsoft.NAV.subscriptions": {
         "value": {
           "clientState": "String",
-          "expirationDateTime": "0001-01-01T00:00:00.0000000+00:00",
-          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00",
+          "expirationDateTime": "0001-01-01T01:24:00+01:24",
+          "lastModifiedDateTime": "0001-01-01T01:24:00+01:24",
           "notificationUrl": "String",
           "resource": "String",
           "subscriptionId": "String (identifier)",
-          "systemCreatedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemCreatedAt": "0001-01-01T01:24:00+01:24",
           "systemCreatedBy": "00000000-0000-0000-0000-000000000000",
-          "systemModifiedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemModifiedAt": "0001-01-01T01:24:00+01:24",
           "systemModifiedBy": "00000000-0000-0000-0000-000000000000",
           "timestamp": 0,
           "userId": "00000000-0000-0000-0000-000000000000"
@@ -4342,13 +4342,13 @@
           "eventName": "String",
           "eventVersion": "String",
           "id": "00000000-0000-0000-0000-000000000000 (identifier)",
-          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00",
+          "lastModifiedDateTime": "0001-01-01T01:24:00+01:24",
           "notificationUrl": "String",
           "subscriptionState": "String",
           "subscriptionType": "String",
-          "systemCreatedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemCreatedAt": "0001-01-01T01:24:00+01:24",
           "systemCreatedBy": "00000000-0000-0000-0000-000000000000",
-          "systemModifiedAt": "0001-01-01T00:00:00.0000000+00:00",
+          "systemModifiedAt": "0001-01-01T01:24:00+01:24",
           "systemModifiedBy": "00000000-0000-0000-0000-000000000000",
           "timestamp": 0,
           "userId": "00000000-0000-0000-0000-000000000000"
@@ -4382,12 +4382,12 @@
           "auxiliaryIndex1": "String (identifier)",
           "availableBalance": 0,
           "bic": "String",
-          "createdAt": "0001-01-01T00:00:00.0000000+00:00",
+          "createdAt": "0001-01-01T01:24:00+01:24",
           "currencyCode": "String",
           "currentBalance": 0,
           "iban": "String",
           "id": "00000000-0000-0000-0000-000000000000",
-          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00"
+          "lastModifiedDateTime": "0001-01-01T01:24:00+01:24"
         }
       },
       "Microsoft.NAV.transaction": {
@@ -4397,10 +4397,10 @@
           "bookingDate": "0001-01-01",
           "counterPartyIban": "String",
           "counterPartyName": "String",
-          "createdAt": "0001-01-01T00:00:00.0000000+00:00",
+          "createdAt": "0001-01-01T01:24:00+01:24",
           "currencyCode": "String",
           "id": "00000000-0000-0000-0000-000000000000",
-          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00",
+          "lastModifiedDateTime": "0001-01-01T01:24:00+01:24",
           "mandateReference": "String",
           "valueDate": "0001-01-01"
         }
@@ -4411,12 +4411,12 @@
           "auxiliaryIndex1": "String (identifier)",
           "availableBalance": 0,
           "bic": "String",
-          "createdAt": "0001-01-01T00:00:00.0000000+00:00",
+          "createdAt": "0001-01-01T01:24:00+01:24",
           "currencyCode": "String",
           "currentBalance": 0,
           "iban": "String",
           "id": "00000000-0000-0000-0000-000000000000",
-          "lastModifiedDateTime": "0001-01-01T00:00:00.0000000+00:00"
+          "lastModifiedDateTime": "0001-01-01T01:24:00+01:24"
         }
       }
     },

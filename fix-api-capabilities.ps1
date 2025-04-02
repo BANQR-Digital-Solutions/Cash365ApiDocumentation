@@ -83,13 +83,10 @@ try {
     # Update YAML paths
     $updatedYaml = Update-YamlPaths $yaml $capabilities
     
-    # Generate output filename
-    $outputPath = [System.IO.Path]::ChangeExtension($YamlPath, ".fixed.yaml")
-    
     # Save updated YAML
-    $updatedYaml | ConvertTo-Json -Depth 100 | Set-Content $outputPath
+    $updatedYaml | ConvertTo-Json -Depth 100 | Set-Content $YamlPath
     
-    Write-Host "Successfully updated API capabilities in: $outputPath"
+    Write-Host "Successfully updated API capabilities in: $YamlPath"
 }
 catch {
     Write-Error "Error processing files: $_"
