@@ -11,7 +11,11 @@
   },
   "servers": [
     {
-      "url": "http://localhost"
+      "url": "https://api.businesscentral.dynamics.com/v2.0/4fec10aa-e544-4364-b0fd-d453521bc81c/DevStMa/api/banqr/payment/v1.0/"
+    }
+  ],"security": [
+    {
+      "oauth2": []
     }
   ],
   "paths": {
@@ -3886,6 +3890,19 @@
           }
         },
         "required": true
+      }
+    },"securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "description": "OAuth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token",
+            "scopes": {
+              "https://api.businesscentral.dynamics.com/.default": "Access Business Central API"
+            }
+          }
+        }
       }
     }
   },
