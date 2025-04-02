@@ -62,14 +62,14 @@ function Update-YamlPaths {
             continue
         }
 
-        # Determine which entity this path belongs to
+        # Extract the actual entity name from the path
         $entityName = $null
-        foreach ($entity in $capabilities.Keys) {
-            # Match both direct paths (/entity) and parameterized paths (/entity(param))
-            if ($path -match "^/$entity(?:\(|$)") {
-                $entityName = $entity
-                break
-            }
+        if ($path -match '^/([^/(]+)') {
+            $entityName = $matches[1]
+        }
+        # For nested paths like /companies({id})/payments
+        elseif ($path -match '/([^/(]+)$') {
+            $entityName = $matches[1]
         }
 
         if ($entityName -and $capabilities.ContainsKey($entityName)) {
@@ -79,27 +79,25 @@ function Update-YamlPaths {
             Write-Host "Processing path '$path' for entity '$entityName'"
             Write-Host "Capabilities: Insertable=$($entityCaps.Insertable), Updatable=$($entityCaps.Updatable), Deletable=$($entityCaps.Deletable)"
 
-            # Root collection endpoint - check POST
-            if ($path -eq "/$entityName") {
-                if (-not $entityCaps.Insertable -and $pathObj.PSObject.Properties['post']) {
-                    $pathObj.PSObject.Properties.Remove('post')
-                    Write-Host "Removed POST operation from $path"
-                    $modified = $true
-                }
+            # Check POST operation
+            if (-not $entityCaps.Insertable -and $pathObj.PSObject.Properties['post']) {
+                $pathObj.PSObject.Properties.Remove('post')
+                Write-Host "Removed POST operation from $path"
+                $modified = $true
             }
             
-            # Individual item endpoint - check PATCH/DELETE
-            if ($path -match '\([^)]+\)$') {
-                if (-not $entityCaps.Updatable -and $pathObj.PSObject.Properties['patch']) {
-                    $pathObj.PSObject.Properties.Remove('patch')
-                    Write-Host "Removed PATCH operation from $path"
-                    $modified = $true
-                }
-                if (-not $entityCaps.Deletable -and $pathObj.PSObject.Properties['delete']) {
-                    $pathObj.PSObject.Properties.Remove('delete')
-                    Write-Host "Removed DELETE operation from $path"
-                    $modified = $true
-                }
+            # Check PATCH operation
+            if (-not $entityCaps.Updatable -and $pathObj.PSObject.Properties['patch']) {
+                $pathObj.PSObject.Properties.Remove('patch')
+                Write-Host "Removed PATCH operation from $path"
+                $modified = $true
+            }
+            
+            # Check DELETE operation
+            if (-not $entityCaps.Deletable -and $pathObj.PSObject.Properties['delete']) {
+                $pathObj.PSObject.Properties.Remove('delete')
+                Write-Host "Removed DELETE operation from $path"
+                $modified = $true
             }
         }
     }
